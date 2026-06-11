@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -41,7 +41,7 @@ class UserAchievement(Base):
     achievement_description = Column(String(255))
     xp_reward = Column(Integer, default=0)
     earned_at = Column(DateTime, default=datetime.utcnow)
-    metadata = Column(JSONB)
+    achievement_metadata = Column(JSONB)
     
     # Relationships
     user = relationship("User", back_populates="achievements")

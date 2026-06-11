@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import List
+from typing import List, Optional
 from functools import lru_cache
 
 
@@ -49,6 +49,13 @@ class Settings(BaseSettings):
     
     # Sentry
     SENTRY_DSN: str = ""
+    
+    # Email (Optional)
+    SMTP_HOST: Optional[str] = None
+    SMTP_PORT: Optional[int] = None
+    SMTP_USER: Optional[str] = None
+    SMTP_PASSWORD: Optional[str] = None
+    EMAILS_FROM_EMAIL: Optional[str] = None
     
     @property
     def database_url_sync(self) -> str:
