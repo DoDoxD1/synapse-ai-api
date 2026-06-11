@@ -1,0 +1,304 @@
+{
+  "apiInfo": {
+    "name": "Synapse AI Backend API",
+    "version": "1.0.0",
+    "baseUrl": "http://localhost:8000/api/v1",
+    "documentation": "http://localhost:8000/docs",
+    "authentication": "Bearer token (JWT)"
+  },
+  "endpoints": {
+    "authentication": [
+      {
+        "name": "Register User",
+        "method": "POST",
+        "path": "/auth/register",
+        "auth": false,
+        "description": "Create a new user account",
+        "requestBody": {
+          "email": "string",
+          "password": "string",
+          "full_name": "string (optional)",
+          "exam_type": "string (optional)",
+          "target_score": "number (optional)",
+          "exam_date": "date (optional)"
+        },
+        "response": {
+          "id": "uuid",
+          "email": "string",
+          "full_name": "string",
+          "created_at": "datetime"
+        }
+      },
+      {
+        "name": "Login User",
+        "method": "POST",
+        "path": "/auth/login",
+        "auth": false,
+        "description": "Login and receive access/refresh tokens",
+        "requestBody": {
+          "email": "string",
+          "password": "string"
+        },
+        "response": {
+          "access_token": "string",
+          "refresh_token": "string",
+          "token_type": "bearer"
+        }
+      },
+      {
+        "name": "Refresh Token",
+        "method": "POST",
+        "path": "/auth/refresh",
+        "auth": false,
+        "description": "Get new access token using refresh token",
+        "requestBody": {
+          "refresh_token": "string"
+        },
+        "response": {
+          "access_token": "string",
+          "refresh_token": "string",
+          "token_type": "bearer"
+        }
+      }
+    ],
+    "users": [
+      {
+        "name": "Get Current User",
+        "method": "GET",
+        "path": "/users/me",
+        "auth": true,
+        "description": "Get authenticated user's profile",
+        "response": {
+          "id": "uuid",
+          "email": "string",
+          "full_name": "string",
+          "exam_type": "string",
+          "target_score": "number"
+        }
+      },
+      {
+        "name": "Update User Profile",
+        "method": "PUT",
+        "path": "/users/me",
+        "auth": true,
+        "description": "Update user profile information",
+        "requestBody": {
+          "full_name": "string (optional)",
+          "exam_type": "string (optional)",
+          "target_score": "number (optional)",
+          "exam_date": "date (optional)"
+        }
+      },
+      {
+        "name": "Delete User Account",
+        "method": "DELETE",
+        "path": "/users/me",
+        "auth": true,
+        "description": "Deactivate user account"
+      }
+    ],
+    "practice": [
+      {
+        "name": "Get Practice Questions",
+        "method": "GET",
+        "path": "/practice/questions",
+        "auth": true,
+        "description": "Get practice questions with adaptive difficulty",
+        "queryParams": {
+          "topic_id": "uuid (required)",
+          "count": "number (optional, 1-50, default: 10)",
+          "difficulty": "string (optional: easy, medium, hard)"
+        },
+        "response": "Array of question objects without correct answers"
+      },
+      {
+        "name": "Submit Answer",
+        "method": "POST",
+        "path": "/practice/submit-answer",
+        "auth": true,
+        "description": "Submit answer and get feedback with XP",
+        "requestBody": {
+          "question_id": "uuid",
+          "answer": "string",
+          "time_taken_seconds": "number (optional)"
+        },
+        "response": {
+          "is_correct": "boolean",
+          "correct_answer": "string",
+          "explanation": "string",
+          "xp_earned": "number"
+        }
+      },
+      {
+        "name": "Get Question Attempts",
+        "method": "GET",
+        "path": "/practice/attempts",
+        "auth": true,
+        "description": "Get user's question attempt history",
+        "queryParams": {
+          "limit": "number (optional, 1-200, default: 50)"
+        },
+        "response": "Array of attempt objects"
+      }
+    ],
+    "studyPlan": [
+      {
+        "name": "Create Study Plan",
+        "method": "POST",
+        "path": "/study-plan/",
+        "auth": true,
+        "description": "Create a personalized study plan",
+        "requestBody": {
+          "start_date": "datetime",
+          "end_date": "datetime",
+          "daily_hours": "number",
+          "target_topics": "array of uuid (optional)"
+        }
+      },
+      {
+        "name": "Get Active Plan",
+        "method": "GET",
+        "path": "/study-plan/active",
+        "auth": true,
+        "description": "Get user's active study plan"
+      },
+      {
+        "name": "Start Study Session",
+        "method": "POST",
+        "path": "/study-plan/sessions",
+        "auth": true,
+        "description": "Start a new study session",
+        "requestBody": {
+          "topic_id": "uuid (optional)",
+          "session_type": "string (practice, review, mock_test, tutoring)"
+        }
+      },
+      {
+        "name": "End Study Session",
+        "method": "POST",
+        "path": "/study-plan/sessions/end",
+        "auth": true,
+        "description": "End an active study session",
+        "requestBody": {
+          "session_id": "uuid"
+        }
+      },
+      {
+        "name": "Get Study Sessions",
+        "method": "GET",
+        "path": "/study-plan/sessions",
+        "auth": true,
+        "description": "Get user's study session history"
+      }
+    ],
+    "mockTests": [
+      {
+        "name": "Get Mock Tests",
+        "method": "GET",
+        "path": "/mock-tests/",
+        "auth": false,
+        "description": "Get list of available mock tests",
+        "queryParams": {
+          "exam_type": "string (optional)"
+        }
+      },
+      {
+        "name": "Get Mock Test by ID",
+        "method": "GET",
+        "path": "/mock-tests/{test_id}",
+        "auth": false,
+        "description": "Get specific mock test details"
+      },
+      {
+        "name": "Start Mock Test",
+        "method": "POST",
+        "path": "/mock-tests/attempts",
+        "auth": true,
+        "description": "Start a new mock test attempt",
+        "requestBody": {
+          "mock_test_id": "uuid"
+        }
+      },
+      {
+        "name": "Submit Mock Test",
+        "method": "POST",
+        "path": "/mock-tests/attempts/submit",
+        "auth": true,
+        "description": "Submit mock test answers",
+        "requestBody": {
+          "attempt_id": "uuid",
+          "answers": "object (question_id: answer)"
+        },
+        "response": {
+          "score": "number",
+          "max_score": "number",
+          "percentile": "number",
+          "detailed_analysis": "object"
+        }
+      },
+      {
+        "name": "Get My Attempts",
+        "method": "GET",
+        "path": "/mock-tests/attempts/my",
+        "auth": true,
+        "description": "Get user's mock test attempt history"
+      }
+    ],
+    "analytics": [
+      {
+        "name": "Get User Statistics",
+        "method": "GET",
+        "path": "/analytics/stats",
+        "auth": true,
+        "description": "Get comprehensive user statistics",
+        "response": {
+          "total_xp": "number",
+          "level": "number",
+          "current_streak": "number",
+          "accuracy_rate": "number",
+          "rank": "number",
+          "percentile": "number"
+        }
+      },
+      {
+        "name": "Get Progress Analytics",
+        "method": "GET",
+        "path": "/analytics/progress",
+        "auth": true,
+        "description": "Get detailed progress analytics and trends"
+      },
+      {
+        "name": "Get Leaderboard",
+        "method": "GET",
+        "path": "/analytics/leaderboard",
+        "auth": true,
+        "description": "Get global leaderboard rankings",
+        "queryParams": {
+          "limit": "number (optional, default: 50)"
+        }
+      }
+    ]
+  },
+  "commonHeaders": {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer {access_token} (for protected endpoints)"
+  },
+  "errorResponses": {
+    "400": "Bad Request - Invalid parameters",
+    "401": "Unauthorized - Invalid or missing token",
+    "403": "Forbidden - Insufficient permissions",
+    "404": "Not Found - Resource not found",
+    "422": "Unprocessable Entity - Validation error",
+    "500": "Internal Server Error"
+  },
+  "authenticationFlow": {
+    "step1": "POST /auth/register to create account",
+    "step2": "POST /auth/login to get tokens",
+    "step3": "Use access_token in Authorization header: Bearer {token}",
+    "step4": "When token expires, use POST /auth/refresh with refresh_token"
+  },
+  "rateLimit": {
+    "perMinute": 60,
+    "perHour": 1000
+  }
+}
