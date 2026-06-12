@@ -3,6 +3,8 @@ from typing import Optional, Dict, List, Any
 from datetime import datetime
 import uuid
 
+from app.schemas.exam_config import ExamType
+
 
 class QuestionBase(BaseModel):
     question_text: str
@@ -12,7 +14,7 @@ class QuestionBase(BaseModel):
 
 class QuestionCreate(QuestionBase):
     topic_id: uuid.UUID
-    exam_type: str
+    exam_type: ExamType
     options: Optional[Dict[str, str]] = None
     correct_answer: str
     explanation: Optional[str] = None
@@ -22,7 +24,7 @@ class QuestionCreate(QuestionBase):
 class QuestionResponse(QuestionBase):
     id: uuid.UUID
     topic_id: uuid.UUID
-    exam_type: str
+    exam_type: ExamType
     options: Optional[Dict[str, str]] = None
     explanation: Optional[str] = None
     difficulty: str

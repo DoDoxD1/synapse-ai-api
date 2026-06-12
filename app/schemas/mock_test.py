@@ -3,9 +3,11 @@ from typing import Optional, Dict, Any
 from datetime import datetime
 import uuid
 
+from app.schemas.exam_config import ExamType
+
 
 class MockTestCreate(BaseModel):
-    exam_type: str
+    exam_type: ExamType
     test_name: str
     duration_minutes: int
     total_questions: int
@@ -14,7 +16,7 @@ class MockTestCreate(BaseModel):
 
 class MockTestResponse(BaseModel):
     id: uuid.UUID
-    exam_type: str
+    exam_type: ExamType
     test_name: str
     duration_minutes: int
     total_questions: int

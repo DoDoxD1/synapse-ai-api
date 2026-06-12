@@ -3,9 +3,11 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime
 import uuid
 
+from app.schemas.exam_config import ExamType
+
 
 class TopicBase(BaseModel):
-    exam_type: str
+    exam_type: ExamType
     name: str
     parent_topic_id: Optional[uuid.UUID] = None
     difficulty_level: Optional[int] = None

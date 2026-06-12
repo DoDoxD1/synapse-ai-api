@@ -48,5 +48,5 @@ def sample_user_data():
         "email": "test@example.com",
         "password": "Test123!@#",
         "full_name": "Test User",
-        "exam_type": "GRE"
+        "exam_type": "GATE"
     }

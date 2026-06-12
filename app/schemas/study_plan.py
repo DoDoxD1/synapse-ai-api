@@ -3,6 +3,8 @@ from typing import Dict, Any, Optional
 from datetime import datetime
 import uuid
 
+from app.schemas.exam_config import ExamType
+
 
 class StudyPlanCreate(BaseModel):
     start_date: datetime
@@ -52,7 +54,7 @@ class StudySessionResponse(BaseModel):
 
 
 class AssessmentRequest(BaseModel):
-    exam_type: str
+    exam_type: ExamType
     topics: Optional[list[str]] = None
 
 
