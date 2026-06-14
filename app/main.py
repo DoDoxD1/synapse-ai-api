@@ -6,7 +6,7 @@ import sentry_sdk
 from app.config import settings
 from app.core.database import init_db, close_db
 from app.core.redis import init_redis, close_redis
-from app.api.v1 import auth, users, practice, study_plan, analytics, mock_tests
+from app.api.v1 import auth, users, practice, study_plan, analytics, mock_tests, diagnostic
 
 
 @asynccontextmanager
@@ -95,6 +95,10 @@ app = FastAPI(
             "name": "mock-tests",
             "description": "Full-length mock tests with detailed analysis"
         },
+        {
+            "name": "diagnostic",
+            "description": "Diagnostic tests to assess knowledge across topics and generate study plans"
+        },
     ]
 )
 
@@ -114,6 +118,7 @@ app.include_router(practice.router, prefix=f"{settings.API_V1_PREFIX}/practice",
 app.include_router(study_plan.router, prefix=f"{settings.API_V1_PREFIX}/study-plan", tags=["study-plan"])
 app.include_router(analytics.router, prefix=f"{settings.API_V1_PREFIX}/analytics", tags=["analytics"])
 app.include_router(mock_tests.router, prefix=f"{settings.API_V1_PREFIX}/mock-tests", tags=["mock-tests"])
+app.include_router(diagnostic.router, prefix=f"{settings.API_V1_PREFIX}/diagnostic", tags=["diagnostic"])
 
 
 @app.get("/")

@@ -68,5 +68,15 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
 
+class TokenPayload(BaseModel):
+    """Decoded JWT claims embedded in the access token."""
+    sub: str                          # user UUID string
+    email: str
+    full_name: str
+    exam_type: Optional[str] = None
+    target_score: Optional[int] = None
+    type: str = "access"
+
+
 class TokenRefresh(BaseModel):
     refresh_token: str

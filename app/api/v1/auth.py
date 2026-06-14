@@ -58,8 +58,15 @@ async def login(credentials: UserLogin, db: AsyncSession = Depends(get_db)):
             detail="Inactive user account"
         )
     
-    # Create tokens
-    access_token = create_access_token({"sub": str(user.id)})
+    # Create tokens — embed user info so frontend can decode without extra API call
+    token_data = {
+        "sub": str(user.id),
+        "email": user.email,
+        "full_name": user.full_name or "",
+        "exam_type": user.exam_type,
+        "target_score": user.target_score,
+    }
+    access_token = create_access_token(token_data)
     refresh_token = create_refresh_token({"sub": str(user.id)})
     
     return TokenResponse(
