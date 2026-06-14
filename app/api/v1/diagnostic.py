@@ -343,20 +343,39 @@ async def get_diagnostic_history(
     )
     diagnostics = result.scalars().all()
 
-    items = [
-        DiagnosticHistoryItem(
-            diagnostic_id=d.id,
-            exam_type=d.exam_type,
-            status=d.status,
-            overall_score=d.overall_score,
-            total_correct=d.correct_answers,
-            total_questions=d.total_questions,
-            time_limit_minutes=d.time_limit_minutes,
-            started_at=d.started_at,
-            completed_at=d.completed_at,
+    items = []
+    for d in diagnostics:
+        # Build topic breakdown from stored JSONB
+        topic_breakdown = None
+        if d.topic_scores:
+            topic_breakdown = [
+                TopicScore(
+                    topic_id=uuid.UUID(tid),
+                    topic_name=data["topic_name"],
+                    correct=data["correct"],
+                    total=data["total"],
+                    score_percent=data["score"],
+                    strength_level=data["strength_level"],
+                )
+                for tid, data in d.topic_scores.items()
+            ]
+            strength_order = {"weak": 0, "moderate": 1, "strong": 2}
+            topic_breakdown.sort(key=lambda t: strength_order.get(t.strength_level, 1))
+
+        items.append(
+            DiagnosticHistoryItem(
+                diagnostic_id=d.id,
+                exam_type=d.exam_type,
+                status=d.status,
+                overall_score=d.overall_score,
+                total_correct=d.correct_answers,
+                total_questions=d.total_questions,
+                time_limit_minutes=d.time_limit_minutes,
+                started_at=d.started_at,
+                completed_at=d.completed_at,
+                topic_breakdown=topic_breakdown,
+            )
         )
-        for d in diagnostics
-    ]
 
     return DiagnosticHistoryResponse(total=total, items=items)
 

@@ -80,6 +80,7 @@ class DiagnosticHistoryItem(BaseModel):
     time_limit_minutes: int
     started_at: datetime
     completed_at: Optional[datetime] = None
+    topic_breakdown: Optional[List[TopicScore]] = None
 
     class Config:
         from_attributes = True
